@@ -1,67 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inte</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inte</title>
 </head>
 <style>
-    *{
-        margin: 0;
-        box-sizing: border-box;
-    }
-    body{
-        width: 100%;
-    }
-    .slide{
-        width: 100%;
-        height: 120vh;
-        display: grid;
-        grid-template: 100%/100%;
-        transition: all 0.4s ;
-    }
-    .slide h1{
-        grid-column: 1/-1;
-        grid-row: 1/-1;
-        align-self: center;
-        justify-self: center;
-        transition: all 2s ;
+  * {
+    margin: 0;
+    box-sizing: border-box;
+  }
 
-    }
-    .slide img{
-        grid-column: 1/-1;
-        grid-row: 1/-1;
-        align-self: center;
-        justify-self: center;
-        transition: all 2s ;
-        width: 20%;
+  body {
+    width: 100%;
+  }
 
-    }
-    .slide:nth-child(2n){
-        background-color: paleturquoise;
-    }
-    .blue{background-color: palevioletred;}
+  .slide {
+    width: 100%;
+    height: 120vh;
+    display: grid;
+    grid-template: 100%/100%;
+    transition: all 0.4s;
+  }
+
+  .slide h1 {
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+    align-self: center;
+    justify-self: center;
+    transition: all 2s;
+
+  }
+
+  .slide .moveLeft {
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+    align-self: center;
+    justify-self: center;
+    transition: all 2s;
+    margin-top: 5em;
+
+  }
+
+  .slide img {
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+    align-self: center;
+    justify-self: center;
+    transition: all 2s;
+    width: 20%;
+
+  }
+
+  .moveX {
+    transform: translateX(100%);
+  }
+
+  .slide:nth-child(2n) {
+    background-color: paleturquoise;
+  }
+
+  .blue {
+    background-color: palevioletred;
+  }
+
+  .gray {
+    background: gold;
+  }
 </style>
+
 <body>
-    <div class="slide">
-        <h1>HELLO 1</h1>
-        <img src="" data-src="IMG_2365.jpg">
-    </div>
-    <div class="slide">
-        <h1 class="second">HELLO 2</h1>
-        <img src="" data-src="392200_3143832954194_1452895942_n.jpg">
+  <div class="slide">
+    <h1>HELLO 1</h1>
+    <img src="" data-src="IMG_2365.jpg">
+  </div>
+  <div class="slide">
+    <h1 class="second">HELLO 2</h1>
+    <p class="moveLeft">Lets move of the left</p>
+  </div>
+  <div class="slide">
+    <h1>HELLO 3</h1>
+    <img src="" data-src="549424_10200684617057261_550644822_n.jpg">
 
-    </div>
-    <div class="slide">
-        <h1>HELLO 3</h1>
-        <img src="" data-src="549424_10200684617057261_550644822_n.jpg">
-
-    </div>
+  </div>
 </body>
 
 <script>
-   
- /*  let observer = new IntersectionObserver(
+  /*  let observer = new IntersectionObserver(
 (entries, observer) => { 
 entries.forEach(entry => {
     entry.target.src = entry.target.dataset.src;
@@ -72,88 +98,79 @@ entries.forEach(entry => {
 
 document.querySelectorAll('img').forEach(img => { observer.observe(img) });*/
 
+  const h1 = document.querySelectorAll('h1')
+  const moveLefttt = document.querySelector('.moveLeft')
 
+  const createObserver = {
+    prevRatio: 0.0,
+    class: 'blue',
+    oberserver: null,
+    options: {
+      root: null, //parents
+      rootMargin: "0px",
+      threshold: 0.2
+    },
+    init: function (effect) {
+      createObserver.class = effect
+      createObserver.oberserver = new IntersectionObserver(createObserver.callback, createObserver.options)
 
-const createObserver = {
-   target:document.querySelector('.second'),
-   prevRatio:0.0,
-   class:'blue',
-   options: {
-    root: null,//parents
-    rootMargin: "0px",
-    threshold: 0.2
-  },
-  callback:function(entries, observer){
-    entries.forEach(entry => {
+    },
+    callback: function (entries, observer) {
+      entries.forEach(entry => {
         if (entry.intersectionRatio > createObserver.prevRatio) {
-        entry.target.classList.add(createObserver.class);
-        console.log(entry);
-
+          entry.target.classList.add(createObserver.class);
         } else {
-        entry.target.classList.remove(createObserver.class);
-        console.log(entry);
+          entry.target.classList.remove(createObserver.class);
         }
         createObserver.prevRatio = entry.intersectionRatio;
-    });
-  },
-  oberserver:null,
+      });
+    },
 
-}
-createObserver.oberserver = new IntersectionObserver(createObserver.callback, createObserver.options),
-createObserver.oberserver.observe(createObserver.target)
+  }
+  const newObeser = createObserver
+  newObeser.init('gray');
+  console.log(newObeser);
+  h1.forEach(title => {
+    newObeser.oberserver.observe(title)
+  })
 
-const lazyload = {
-   target:document.querySelectorAll('img'),
-   prevRatio:0.0,
-   class:'blue',
-   options: {
-    root: null,//parents
-    rootMargin: "0px",
-    threshold: 0.2
-  },
-  callback:function(entries, observer){
-    entries.forEach(entry => {
+  const moveLeft = createObserver
+  moveLeft.init('moveX')
+  moveLeft.oberserver.observe(moveLefttt)
+
+  //createObserver.oberserver.observe(h1)
+
+
+
+
+
+
+  const lazyload = {
+    target: document.querySelectorAll('img'),
+    prevRatio: 0.0,
+    class: 'blue',
+    options: {
+      root: null, //parents
+      rootMargin: "0px",
+      threshold: 0.2
+    },
+    callback: function (entries, observer) {
+      entries.forEach(entry => {
         if (entry.intersectionRatio > createObserver.prevRatio) {
-            entry.target.src = entry.target.dataset.src;
-            observer.unobserve(entry.target);
+          entry.target.src = entry.target.dataset.src;
+          observer.unobserve(entry.target);
 
         }
         lazyload.prevRatio = entry.intersectionRatio;
+      });
+    },
+    oberserver: null,
+
+  }
+  lazyload.oberserver = new IntersectionObserver(lazyload.callback, lazyload.options),
+    document.querySelectorAll('img').forEach(img => {
+      lazyload.oberserver.observe(img)
     });
-  },
-  oberserver:null,
-
-}
-lazyload.oberserver = new IntersectionObserver(lazyload.callback, lazyload.options),
-document.querySelectorAll('img').forEach(img => { lazyload.oberserver.observe(img) });
-
-/*function createObserver() {
-  var observer;
-
-  var options = {
-    root: null,//parents
-    rootMargin: "0px",
-    threshold: 0.5
-  };
-
-  observer = new IntersectionObserver(callback, options);
-  observer.observe(target);
-}
-createObserver()
-target.classList.add('')
-
-function callback(entries, observer) { 
-  entries.forEach(entry => {
-    if (entry.intersectionRatio > prevRatio) {
-      entry.target.style.backgroundColor = 'blue';
-    } else {
-      entry.target.style.backgroundColor = 'red';
-      console.log(entry);
-    }
-
-    prevRatio = entry.intersectionRatio;
-  });
-};
-*/
 </script>
+
 </html>
