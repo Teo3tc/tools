@@ -27,7 +27,7 @@
   .slide h1 {
     grid-column: 1/-1;
     grid-row: 1/-1;
-    align-self: center;
+    align-self: flex-start;
     justify-self: center;
     transition: all 2s;
 
@@ -75,7 +75,7 @@
     <h1>HELLO 1</h1>
     <img src="" data-src="IMG_2365.jpg">
   </div>
-  <div class="slide">
+  <div class="slide slide2">
     <h1 class="second">HELLO 2</h1>
     <p class="moveLeft">Lets move of the left</p>
   </div>
@@ -87,62 +87,47 @@
 </body>
 
 <script>
-  /*  let observer = new IntersectionObserver(
-(entries, observer) => { 
-entries.forEach(entry => {
-    entry.target.src = entry.target.dataset.src;
-    observer.unobserve(entry.target);
-  });
-}, 
-{rootMargin: "0px 0px 0px 0px"});
-
-document.querySelectorAll('img').forEach(img => { observer.observe(img) });*/
-
   const h1 = document.querySelectorAll('h1')
   const moveLefttt = document.querySelector('.moveLeft')
 
-  const createObserver = {
-    prevRatio: 0.0,
-    class: 'blue',
-    oberserver: null,
-    options: {
-      root: null, //parents
-      rootMargin: "0px",
-      threshold: 0.2
-    },
-    init: function (effect) {
-      createObserver.class = effect
-      createObserver.oberserver = new IntersectionObserver(createObserver.callback, createObserver.options)
 
-    },
-    callback: function (entries, observer) {
-      entries.forEach(entry => {
-        if (entry.intersectionRatio > createObserver.prevRatio) {
-          entry.target.classList.add(createObserver.class);
-        } else {
-          entry.target.classList.remove(createObserver.class);
-        }
-        createObserver.prevRatio = entry.intersectionRatio;
-      });
-    },
-
+  class observer {
+    constructor(options, effect) {
+      this.prevRatio = 0.0
+      this.class = effect
+      this.options = options
+      this.oberserver = null
+      this.oberserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.intersectionRatio > this.prevRatio) {
+            entry.target.classList.add(this.class);
+          } else {
+            entry.target.classList.remove(this.class);
+          }
+          this.prevRatio = entry.intersectionRatio;
+        });
+      }, this.options)
+    }
   }
-  const newObeser = createObserver
-  newObeser.init('gray');
-  console.log(newObeser);
-  h1.forEach(title => {
-    newObeser.oberserver.observe(title)
-  })
 
-  const moveLeft = createObserver
-  moveLeft.init('moveX')
+
+  const options2 = {
+    root: null, //parents
+    rootMargin: "0px",
+    threshold: 0.2
+  }
+  const moveLeft = new observer({
+    root: null,
+    rootMargin: '0px',
+    threshold: 1
+  }, 'moveX')
   moveLeft.oberserver.observe(moveLefttt)
-
+  console.log(moveLeft.oberserver);
+  const moveTitle = new observer(options2, 'gray')
+  h1.forEach(h => {
+    moveTitle.oberserver.observe(h)
+  });
   //createObserver.oberserver.observe(h1)
-
-
-
-
 
 
   const lazyload = {
